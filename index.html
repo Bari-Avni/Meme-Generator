@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+
+<body onload="init()">
+
+    <div class="main-screen" onclick="toggleMenu()"></div>
+
+    <!-- Header -->
+    <header class="main-header flex align-center space-around container-bcg">
+        <div class="header-container main-container flex space-between align-center">
+            <div class="logo">
+                <img src="logo/LOGO.png">
+            </div>
+            <ul class="main-nav clean-list flex">
+                <li><a class="flex space-center align-center nav-btn" href="#" onclick="onSetGallery()">Gallery</a></li>
+                <li class="separator flex space-center align-center">|</li>
+                <li><a class="flex space-center align-center nav-btn" href="#about">About</a></li>
+            </ul>
+        </div>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <!-- Main -->
+    <main class="main-container">
+        <!-- Canvas Memes -->
+        <section class="canvas-container">
+            <div class="meme flex">
+                <div class="canvas">
+                    <canvas id="my-canvas" height="550" width="550">
+                    </canvas>
+                </div>
+
+                <div class="meme-editor flex flex-column">
+                    <input class="text-display" type="text" id="text-line" onfocus="this.placeholder=''"
+                        placeholder="text-line" name="text-line" autocomplete="off" oninput="onAddText()">
+                    <div class="btns-upper grid-btn-top">
+                        <div class="flex space-between">
+                            <img class="btn arrow" src="img/arrow-down.png" onclick="onMoveDown()">
+                            <img class="btn arrow" src="img/arrow-up.png" onclick="onMoveUp()">
+                        </div>
+                        <img class="btn" src="icons/up-and-down-opposite-double-arrows-side-by-side.png"
+                            onclick="onSwitchLines()">
+                        <img class="btn" src="icons/add.png" onclick="onAddTextLine()">
+                        <img class="btn" src="icons/trash.png" onclick="onRemoveTextLine()">
+                    </div>
+                    <div class="btns-lower grid-btn-bot">
+                        <img class="btn" src="icons/increase-font-icon.png" onclick="onIncreaseFont()">
+                        <img class="btn" src="icons/decrease-font-icon.png" onclick="onDecreaseFont()">
+                        <img class="btn" src="icons/align-to-left.png" onclick="onAlignLeft()">
+                        <img class="btn" src="icons/center-text-alignment.png" onclick="onAlignCenter()">
+                        <img class="btn" src="icons/align-to-right.png" onclick="onAlignRight()">
+                        <select class="text-font" onclick="onTextFont(this.value)">
+                            <option value="IMPACT" selected>IMPACT</option>
+                            <option value="arial">Arial</option>
+                            <option value="stencil">Stencil</option>
+                            <option value="tahoma">Tahoma</option>
+                        </select>
+                        <img class="btn img-stroke" src="icons/text-stroke.png">
+                        <input class="btn color-stroke" type="color" id="txt-color" name="color" form="frmRegister"
+                            value="#000000" style='opacity:0' onchange="onTextStroke()" />
+                        <img class="btn img-text" src="icons/paint-board-and-brush.png">
+                        <input class="btn color-text" type="color" id="txt-color" name="color" form="frmRegister"
+                            value="#000000" style='opacity:0' onchange="onTextColor()" />
+                    </div>
+                    <div class="download-button">
+                        <a class="download-btn" href="#" onclick="downloadCanvas(this)" download="">Download</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="images-container">
+            <div class="images images-wrapper grid">
+                <!-- Render Images -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Me -->
+    <section class="about-container" id="about">
+        <div class="about flex">
+            <div>
+                <img class="img-circle" src="img/me.jpg" alt="">
+            </div>
+            <div class="about-me flex flex-column">
+                <h4 class="me-header">Bari Avni</h4>
+                <p class="me-text"> Leaves in Kfar Blum, Israel. Currently study Full Stack Programming, which is very fascinating and interesting, and excited to advance in studies and become a professional...</p>
+                <ul class="social-links clean-list flex flex-row">
+                    <li class="btn logo-in-bg">
+                        <a href=""><img class="logo-in" src="icons/linkedin-logo.png" alt=""></a>
+                    </li>
+                    <li class="btn logo-fb-bg">
+                        <a href=""><img class="logo-fb" src="icons/facebook-logo.png" alt=""></a>
+                    </li>
+                    <li class="btn logo-gh-bg">
+                        <a href=""><img class="logo-gh" src="icons/github-logo.png" alt=""></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="logo">
+            <img class="flex space-around" src="logo/LOGO.png">
+        </div>
+        <small>all rights reserved 2019</small>
+    </footer>
+
+
+    <script src="js/services/storage-service.js"></script>
+    <script src="js/services/meme-service.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
