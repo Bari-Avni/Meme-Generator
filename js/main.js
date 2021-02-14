@@ -76,6 +76,7 @@ function onSetGallery() {
     document.querySelector('.canvas-container').style.display = 'none';
     document.querySelector('.images-container').style.display = 'block';
     document.querySelector('.about-container').style.display = 'block';
+    document.body.style.cursor = 'auto';
     renderImgGallery();
 }
 
@@ -85,13 +86,12 @@ function onAddText() {
     renderCanvas();
 }
 
-function onIncreaseFont() {
-    increaseFont();
-    renderCanvas();
-}
-
-function onDecreaseFont() {
-    decreaseFont();
+function onChangeFontSize(change) {
+    var diff;
+    if (change === 1) {
+        diff = 10;
+    } else diff = -10;
+    changeFontSize(diff);
     renderCanvas();
 }
 
@@ -106,13 +106,16 @@ function onAddTextLine() {
 
 function onSwitchLines() {
     if (gMeme.lines.length < 1) return;
-    var currLineIdx = setMemeLineIdx();
-    var lineTxt = gMeme.lines[currLineIdx].txt;
-    document.querySelector('.text-display').value = lineTxt;
-    var y = gMeme.lines[currLineIdx].posY - gMeme.lines[currLineIdx].size;
+    setMemeLineIdx();
+    onUpdatetextInput();   
     gIsFocus = true;
     gIsAdd = false;
     renderCanvas();
+}
+
+function onUpdatetextInput(){
+    var lineTxt = gMeme.lines[gMeme.selectedLineIdx].txt;
+    document.querySelector('.text-display').value = lineTxt;
 }
 
 function onRemoveTextLine() {

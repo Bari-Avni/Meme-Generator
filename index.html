@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Document</title>
+    <title>Meme Generator</title>
 </head>
 
 <body onload="init()">
@@ -52,8 +52,8 @@
                         <img class="btn" src="icons/trash.png" onclick="onRemoveTextLine()">
                     </div>
                     <div class="btns-lower grid-btn-bot">
-                        <img class="btn" src="icons/increase-font-icon.png" onclick="onIncreaseFont()">
-                        <img class="btn" src="icons/decrease-font-icon.png" onclick="onDecreaseFont()">
+                        <img class="btn" src="icons/increase-font-icon.png" onclick="onChangeFontSize(1)">
+                        <img class="btn" src="icons/decrease-font-icon.png" onclick="onChangeFontSize(-1)">
                         <img class="btn" src="icons/align-to-left.png" onclick="onAlignLeft()">
                         <img class="btn" src="icons/center-text-alignment.png" onclick="onAlignCenter()">
                         <img class="btn" src="icons/align-to-right.png" onclick="onAlignRight()">
@@ -65,10 +65,10 @@
                         </select>
                         <img class="btn img-stroke" src="icons/text-stroke.png">
                         <input class="btn color-stroke" type="color" id="txt-color" name="color" form="frmRegister"
-                            value="#000000" style='opacity:0' onchange="onTextStroke()" />
+                            value="#000000" style='opacity:0' oninput="onTextStroke()" />
                         <img class="btn img-text" src="icons/paint-board-and-brush.png">
                         <input class="btn color-text" type="color" id="txt-color" name="color" form="frmRegister"
-                            value="#000000" style='opacity:0' onchange="onTextColor()" />
+                            value="#000000" style='opacity:0' oninput="onTextColor()" />
                     </div>
                     <div class="download-button">
                         <a class="download-btn" href="#" onclick="downloadCanvas(this)" download="">Download</a>

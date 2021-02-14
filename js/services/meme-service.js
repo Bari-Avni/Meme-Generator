@@ -8,11 +8,27 @@ const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 
 var gMemes;
 var gKeywords = { 'happy': 12, 'funny puk': 1 };
-var gImgs = [{
-    id: 1,
-    url: 'img/1.jpg',
-    keywords: ['happy']
-}];
+var gImgs = [
+    { id: 1, url: 'img/1.jpg', keywords: ['politics'] },
+    { id: 2, url: 'img/2.jpg', keywords: ['animal'] },
+    { id: 3, url: 'img/3.jpg', keywords: ['animal', 'kid'] },
+    { id: 4, url: 'img/4.jpg', keywords: ['animal'] },
+    { id: 5, url: 'img/5.jpg', keywords: ['kid'] },
+    { id: 6, url: 'img/6.jpg', keywords: ['funny'] },
+    { id: 7, url: 'img/7.jpg', keywords: ['kid', 'funny'] },
+    { id: 8, url: 'img/8.jpg', keywords: ['funny'] },
+    { id: 9, url: 'img/9.jpg', keywords: ['kid', 'funny'] },
+    { id: 10, url: 'img/10.jpg', keywords: ['politics'] },
+    { id: 11, url: 'img/11.jpg', keywords: ['sport'] },
+    { id: 12, url: 'img/12.jpg', keywords: ['show'] },
+    { id: 13, url: 'img/13.jpg', keywords: ['show'] },
+    { id: 14, url: 'img/14.jpg', keywords: ['show'] },
+    { id: 15, url: 'img/15.jpg', keywords: ['show'] },
+    { id: 16, url: 'img/16.jpg', keywords: ['show'] },
+    { id: 17, url: 'img/17.jpg', keywords: ['politics'] },
+    { id: 18, url: 'img/18.jpg', keywords: ['toy'] }
+];
+
 var gMeme = {
     selectedImgId: 1,
     selectedLineIdx: 0,
@@ -29,8 +45,6 @@ var gMeme = {
         isDragging: false
     }]
 }
-
-_createImgs();
 
 function getImgs() {
     return gImgs;
@@ -62,6 +76,9 @@ function addText() {
         gMeme.lines.splice(gMeme.selectedLineIdx, 1);
         gMeme.linesCount--;
         gMeme.selectedLineIdx--;
+        if (gMeme.selectedLineIdx === -1) {
+            gMeme.selectedLineIdx = gMeme.linesCount - 1;
+        }
         gIsAdd = true;
         gIstxt = false;
         gIsFocus = false;
@@ -69,9 +86,9 @@ function addText() {
 }
 
 function setPosition() {
-    if (gMeme.lines[gMeme.selectedLineIdx].posX) {
-        return;
-    }
+    if(!gMeme.lines.length) return;
+    if (gMeme.lines[gMeme.selectedLineIdx].posX) return;
+    if(!gIstxt) return;
     var posY;
     var posX;
     if (gMeme.linesCount === 1) {
@@ -151,12 +168,8 @@ function downloadCanvas(elLink) {
     elLink.download = 'My_Meme'
 }
 
-function increaseFont() {
-    gMeme.lines[gMeme.selectedLineIdx].size += 10;
-}
-
-function decreaseFont() {
-    gMeme.lines[gMeme.selectedLineIdx].size -= 10;
+function changeFontSize(diff) {
+    gMeme.lines[gMeme.selectedLineIdx].size += diff;
 }
 
 function alignLeft() {
@@ -186,23 +199,6 @@ function textColor(color) {
     gMeme.lines[gMeme.selectedLineIdx].color = color;
 }
 
-function _createImgs() {
-    var imgs = [];
-    for (let i = 0; i < 18; i++) {
-        var keyword = 'happy';
-        imgs.push(_createImg(i + 1, keyword));
-    }
-    gImgs = imgs;
-}
-
-function _createImg(imgId = 1, keyword) {
-    return {
-        id: imgId,
-        url: `img/${imgId}.jpg`,
-        keywords: [keyword]
-    }
-}
-
 function _addMemeText() {
     return {
         txt: '',
@@ -227,23 +223,23 @@ function addListeners() {
 }
 
 function addMouseListeners() {
-    gElCanvas.addEventListener('mousemove', onMove);
-    gElCanvas.addEventListener('mousedown', onDown);
-    gElCanvas.addEventListener('mouseup', onUp);
+    gElCanvas.addEventListener('mousemove', onMouseMove);
+    gElCanvas.addEventListener('mousedown', onMouseDown);
+    gElCanvas.addEventListener('mouseup', onMouseUp);
 }
 
 function addTouchListeners() {
-    gElCanvas.addEventListener('touchmove', onMove);
-    gElCanvas.addEventListener('touchstart', onDown);
-    gElCanvas.addEventListener('touchend', onUp);
+    gElCanvas.addEventListener('touchmove', onMouseMove);
+    gElCanvas.addEventListener('touchstart', onMouseDown);
+    gElCanvas.addEventListener('touchend', onMouseUp);
 }
 
-function onDown(ev) {
+function onMouseDown(ev) {
     const pos = getEvPos(ev);
     if (gStyle === 'continual') {
-        if (!isShapeClicked(pos)) return;
+        if (!isTextClicked(pos)) return;
     } else {
-        if (!gMeme.isDragging){
+        if (!gMeme.isDragging) {
             gMeme.lines[gMeme.selectedLineIdx].posX = pos.x;
             gMeme.lines[gMeme.selectedLineIdx].posY = pos.y;
         }
@@ -251,9 +247,12 @@ function onDown(ev) {
     gMeme.isDragging = true;
     gStartPos = pos;
     document.body.style.cursor = 'grabbing';
+    gIsFocus = true;
+    onUpdatetextInput();
+    renderCanvas();
 }
 
-function onMove(ev) {
+function onMouseMove(ev) {
     if (gMeme.isDragging) {
         const pos = getEvPos(ev);
         const dx = pos.x - gStartPos.x;
@@ -267,7 +266,7 @@ function onMove(ev) {
     }
 }
 
-function onUp() {
+function onMouseUp() {
     gMeme.isDragging = false;
     document.body.style.cursor = 'grab';
 }
@@ -294,13 +293,24 @@ function getEvPos(ev) {
     return pos;
 }
 
-function isShapeClicked(clickedPos) {
-    var posX = gMeme.lines[gMeme.selectedLineIdx].posX;
-    var posY = gMeme.lines[gMeme.selectedLineIdx].posY;
-    var distanceX = Math.abs(posX - clickedPos.x);
-    var distanceY = Math.abs(posY - clickedPos.y - gMeme.lines[gMeme.selectedLineIdx].size / 2);
-    if(distanceX < 30 && distanceY < 10) return true;
-    else return false;
+function isTextClicked(clickedPos) {
+    for (var i = 0; i < gMeme.lines.length; i++) {
+        gMeme.selectedLineIdx = i;
+        var posX = gMeme.lines[i].posX;
+        var posY = gMeme.lines[i].posY;
+        var textLength = gCtx.measureText(gMeme.lines[i].txt).width;
+        var distanceX = clickedPos.x - posX;
+        var distanceY = posY - clickedPos.y;
+        if (distanceY < gMeme.lines[i].size * 0.6 && distanceY > 0) {
+            if (gMeme.lines[i].align === 'left') {
+                if (distanceX > 0 && distanceX < textLength) return true;
+            } else if (gMeme.lines[i].align === 'right') {
+                if (distanceX > textLength * (-1) && distanceX < 0) return true;
+            } else if (gMeme.lines[i].align === 'center') {
+                if (distanceX > textLength / (-2) && distanceX < textLength / 2) return true;
+            } else return false;
+        }
+    }
 }
 
 // Not supported yet
